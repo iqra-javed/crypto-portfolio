@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Calculate({ activeCurrency, handleSubmit, handleChange, amount }) {
+export default function Calculate({ activeCurrency, handleSubmit, handleChange, amount, error }) {
   return (
     <div>
       <h1>How much {activeCurrency.name} do you own?</h1>
@@ -19,7 +19,7 @@ export default function Calculate({ activeCurrency, handleSubmit, handleChange, 
           ></input>
         </div>
         <div className="form-group">
-            <input type="submit" className="calculate-btn" value="Calculate My Total"></input>
+            <input type="submit" className="calculate-btn" value="Calculate My Total" disabled={error}></input>
         </div>
       </form>
     </div>

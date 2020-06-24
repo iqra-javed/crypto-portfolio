@@ -9,6 +9,7 @@ export default function PortfolioContainer() {
   const [searchResults, setSearchResults] = useState([]);
   const [activeCurrency, setActiveCurrency] = useState(null);
   const [amount, setAmount] = useState('');
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     axios
@@ -29,7 +30,6 @@ export default function PortfolioContainer() {
     const activeCurrency = searchResults.filter(
       (item) => item.id == parseInt(id)
     )[0];
-    console.log('activeCurrency', activeCurrency)
     setActiveCurrency(activeCurrency);
     setSearchResults([]);
   };
@@ -39,16 +39,14 @@ export default function PortfolioContainer() {
 
     let currency = activeCurrency;
     let currentAmount = amount;
-    console.log('currency', currency)
-    console.log('currentAmount', currentAmount)
+
     axios
       .post('http://localhost:3000/calculate', {
         id: currency.id,
         amount: currentAmount,
       })
       .then((data) => {
-          console.log('testing data response: ', data)
-        setPortfolio(prevPortfolio => [...prevPortfolio, data.data]);
+        setPortfolio((prevPortfolio) => [...prevPortfolio, data.data]);
         setAmount('');
         setActiveCurrency(null);
       })
@@ -58,16 +56,26 @@ export default function PortfolioContainer() {
   };
 
   const handleAmount = (e) => {
-    setAmount(e.target.value);
+    const amount = e.target.value;
+    if (isNaN(amount)) {
+      setError('Please enter a numerical value.');
+    } else {
+      setError('');
+      setAmount(e.target.value);
+    }
   };
 
   const searchOrCalculate = activeCurrency ? (
-    <Calculate
-      handleChange={handleAmount}
-      handleSubmit={handleSubmit}
-      activeCurrency={activeCurrency}
-      amount={amount}
-    />
+    <Fragment>
+      <Calculate
+        handleChange={handleAmount}
+        handleSubmit={handleSubmit}
+        activeCurrency={activeCurrency}
+        amount={amount}
+        error={error}
+      />
+      {error && <div className='error'>{error}</div>}
+    </Fragment>
   ) : (
     <Search
       searchResults={searchResults}

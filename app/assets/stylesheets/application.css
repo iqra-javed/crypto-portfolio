@@ -155,3 +155,10 @@
     float:right;
     font-size:12px;
   }
+
+  .error {
+    color: red;
+    font-style: italic;
+    font-size: 16px;
+    margin-top: 10px;
+  }
